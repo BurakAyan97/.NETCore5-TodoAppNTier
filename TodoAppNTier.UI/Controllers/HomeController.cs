@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoAppNTier.Bussiness.Interfaces;
 using TodoAppNTier.Dtos.WorkDtos;
@@ -16,8 +17,8 @@ namespace TodoAppNTier.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var workList = await _workService.GetAll();
-            return View(workList);
+            var response= await _workService.GetAll();
+            return View(response.Data);
         }
 
         public IActionResult Create()
@@ -28,35 +29,21 @@ namespace TodoAppNTier.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(WorkCreateDto dto)
         {
-            if (ModelState.IsValid)
-            {
-                await _workService.Create(dto);
-                return RedirectToAction("Index");
-            }
-            return View(dto);
+            var response = await _workService.Create(dto);
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Update(int id)
         {
-            var dto = await _workService.GetById(id);
-
-            return View(new WorkUpdateDto
-            {
-                Id = dto.Id,
-                Definition = dto.Definition,
-                IsCompleted = dto.IsCompleted,
-            });
+            var response = await _workService.GetById<WorkUpdateDto>(id);
+            return View(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> Update(WorkUpdateDto dto)
         {
-            if (ModelState.IsValid)
-            {
-                await _workService.Update(dto);
-                return RedirectToAction("Index");
-            }
-            return View(dto);
+            await _workService.Update(dto);
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Remove(int id)

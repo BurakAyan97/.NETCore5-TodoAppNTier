@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TodoAppNTier.Common.ResponseObjects;
+using TodoAppNTier.Dtos.Interfaces;
 using TodoAppNTier.Dtos.WorkDtos;
 
 namespace TodoAppNTier.Bussiness.Interfaces
 {
     public interface IWorkService
     {
-        Task<List<WorkListDto>> GetAll();
-        Task Create(WorkCreateDto dto);
-        Task<WorkListDto> GetById(int id);
-        Task Remove(object id);
-        Task Update(WorkUpdateDto dto);
+        Task<IResponse<List<WorkListDto>>> GetAll();
+        Task<IResponse<WorkCreateDto>> Create(WorkCreateDto dto);
+        //Gruplama için bütün dtolara boş bir IDto interfacesi oluşturduk
+        Task<IResponse<IDto>> GetById<IDto>(int id);
+        Task<IResponse> Remove(int id);
+        Task<IResponse<WorkUpdateDto>> Update(WorkUpdateDto dto);
     }
 }

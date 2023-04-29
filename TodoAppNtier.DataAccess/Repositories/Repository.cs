@@ -11,7 +11,7 @@ using TodoAppNTier.Entities.Domains;
 
 namespace TodoAppNtier.DataAccess.Repositories
 {
-    public class Repository<T> : IRepository<T> where T :BaseEntity
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly TodoContext _context;
 
@@ -32,12 +32,10 @@ namespace TodoAppNtier.DataAccess.Repositories
 
         public async Task<T> GetByFilter(Expression<Func<T, bool>> filter, bool asNoTracking = false)
         {
-            return asNoTracking
-                ? await _context.Set<T>().Where(filter).SingleOrDefaultAsync()
-                : await _context.Set<T>().AsNoTracking().SingleOrDefaultAsync();
+            return asNoTracking ? await _context.Set<T>().SingleOrDefaultAsync(filter) : await _context.Set<T>().AsNoTracking().SingleOrDefaultAsync(filter);
         }
 
-        public async Task<T> GetById(object id)
+        public async Task<T> Find(object id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -47,18 +45,15 @@ namespace TodoAppNtier.DataAccess.Repositories
             return _context.Set<T>().AsQueryable();
         }
 
-        public void Remove(object id)
+        public void Remove(T entity)
         {
-            var deletedEntity = _context.Set<T>().Find(id);
-            _context.Set<T>().Remove(deletedEntity);
+            _context.Set<T>().Remove(entity);
         }
 
-        public void Update(T entity)
+        public void Update(T entity, T unchanged)
         {
             //Sadece güncellenen propertyi update eder.
-            var updatedEntity = _context.Set<T>().Find(entity.Id);
-            _context.Entry(updatedEntity).CurrentValues.SetValues(entity);
-            //_context.Set<T>().Update(entity);
+            _context.Entry(unchanged).CurrentValues.SetValues(entity);
         }
     }
 }
