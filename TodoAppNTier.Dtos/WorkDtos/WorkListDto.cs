@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TodoAppNTier.Entities.Domains
+namespace TodoAppNTier.Dtos.WorkDtos
 {
-    public class Work:BaseEntity
+    public class WorkListDto
     {
+        public int Id { get; set; }
         public string Definition { get; set; }
         public bool IsCompleted { get; set; }
     }

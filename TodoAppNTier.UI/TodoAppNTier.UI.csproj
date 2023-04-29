@@ -16,4 +16,9 @@
     <ProjectReference Include="..\TodoAppNTier.Bussiness\TodoAppNTier.Bussiness.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
