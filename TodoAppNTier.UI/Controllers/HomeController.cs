@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Threading.Tasks;
 using TodoAppNTier.Bussiness.Interfaces;
+using TodoAppNTier.Common.ResponseObjects;
 using TodoAppNTier.Dtos.WorkDtos;
+using TodoAppNTier.UI.Extensions;
 
 namespace TodoAppNTier.UI.Controllers
 {
@@ -17,7 +20,8 @@ namespace TodoAppNTier.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var response= await _workService.GetAll();
+            var response = await _workService.GetAll();
+
             return View(response.Data);
         }
 
@@ -30,26 +34,31 @@ namespace TodoAppNTier.UI.Controllers
         public async Task<IActionResult> Create(WorkCreateDto dto)
         {
             var response = await _workService.Create(dto);
-            return RedirectToAction("Index");
+            return this.ResponseRedirectToAction(response, "Index");
         }
 
         public async Task<IActionResult> Update(int id)
         {
             var response = await _workService.GetById<WorkUpdateDto>(id);
-            return View(response);
+            return this.ResponseView(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> Update(WorkUpdateDto dto)
         {
-            await _workService.Update(dto);
-            return RedirectToAction("Index");
+            var response = await _workService.Update(dto);
+            return this.ResponseRedirectToAction(response, "Index");
         }
 
         public async Task<IActionResult> Remove(int id)
         {
-            await _workService.Remove(id);
-            return RedirectToAction("Index");
+            var response = await _workService.Remove(id);
+            return this.ResponseRedirectToAction(response, "Index");
+        }
+
+        public IActionResult NotFound(int code)
+        {
+            return View();
         }
     }
 }

@@ -30,6 +30,7 @@ namespace TodoAppNTier.UI
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?code={0}");
             app.UseStaticFiles();
 
             #region NPM Kodu

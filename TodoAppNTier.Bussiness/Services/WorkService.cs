@@ -7,6 +7,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using TodoAppNtier.DataAccess.UnitOfWork;
+using TodoAppNTier.Bussiness.Extensions;
 using TodoAppNTier.Bussiness.Interfaces;
 using TodoAppNTier.Bussiness.ValidationRules;
 using TodoAppNTier.Common.ResponseObjects;
@@ -42,19 +43,7 @@ namespace TodoAppNTier.Bussiness.Services
                 return new Response<WorkCreateDto>(ResponseType.Success, dto);
             }
             else
-            {
-                List<CustomValidationError> errors = new();
-                foreach (var item in validationResult.Errors)
-                {
-                    errors.Add(new()
-                    {
-                        ErrorMessage = item.ErrorMessage,
-                        PropertyName = item.PropertyName
-                    });
-                }
-
-                return new Response<WorkCreateDto>(ResponseType.ValidationError, dto, errors);
-            }
+                return new Response<WorkCreateDto>(ResponseType.ValidationError, dto, validationResult.ConvertToCustomValidationError());
         }
 
         public async Task<IResponse<List<WorkListDto>>> GetAll()
@@ -100,20 +89,7 @@ namespace TodoAppNTier.Bussiness.Services
                 return new Response<WorkUpdateDto>(ResponseType.NotFound, $"{dto.Id} ye ait data bulunamadı");
             }
             else
-            {
-                List<CustomValidationError> errors = new();
-                foreach (var item in result.Errors)
-                {
-                    errors.Add(new()
-                    {
-                        ErrorMessage = item.ErrorMessage,
-                        PropertyName = item.PropertyName
-                    });
-                }
-
-                return new Response<WorkUpdateDto>(ResponseType.ValidationError, dto, errors);
-            }
-
+                return new Response<WorkUpdateDto>(ResponseType.ValidationError, dto, result.ConvertToCustomValidationError());
         }
     }
 }
